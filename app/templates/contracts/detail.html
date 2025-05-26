@@ -5,40 +5,68 @@
         <p style="color: red;">{{ error }}</p>
     {% endif %}
     <div class="contract-details">
-        <form action="{{ url_for('contracts.edit_contract', id=contract.id) }}" method="post">
-            <p>
-                <label for="number">Номер:</label>
-                <input type="text" id="number" name="number" value="{{ contract.number }}" {% if not edit_mode %}readonly{% endif %} required>
-            </p>
-            <p>
-                <label for="contract_date">Дата:</label>
-                <input type="date" id="contract_date" name="contract_date" value="{{ contract.contract_date | date_format }}" {% if not edit_mode %}readonly{% endif %} required>
-            </p>
-            <p>
-                <label for="subject">Субъект:</label>
-                <input type="text" id="subject" name="subject" value="{{ contract.subject }}" {% if not edit_mode %}readonly{% endif %} required>
-            </p>
-            <p>
-                <label for="price">Цена:</label>
-                <input type="number" step="0.01" id="price" name="price" value="{{ contract.price }}" {% if not edit_mode %}readonly{% endif %} required>
-            </p>
-            <p>
-                <label for="address">Адрес:</label>
-                <input type="text" id="address" name="address" value="{{ contract.address }}" {% if not edit_mode %}readonly{% endif %} required>
-            </p>
-            <p>
-                <label for="work_description">Наименование работ:</label>
-                <textarea id="work_description" name="work_description" {% if not edit_mode %}readonly{% endif %} required>{{ contract.work_description }}</textarea>
-            </p>
-            <p>
-                {% if edit_mode %}
+        {% if edit_mode %}
+            <form action="{{ url_for('contracts.edit_contract', id=contract.id) }}" method="post">
+                <p>
+                    <label for="number">Номер:</label>
+                    <input type="text" id="number" name="number" value="{{ contract.number }}" required>
+                </p>
+                <p>
+                    <label for="contract_date">Дата:</label>
+                    <input type="date" id="contract_date" name="contract_date" value="{{ contract.contract_date | date_format }}" required>
+                </p>
+                <p>
+                    <label for="subject">Субъект:</label>
+                    <input type="text" id="subject" name="subject" value="{{ contract.subject }}" required>
+                </p>
+                <p>
+                    <label for="price">Цена:</label>
+                    <input type="number" step="0.01" id="price" name="price" value="{{ contract.price }}" required>
+                </p>
+                <p>
+                    <label for="address">Адрес:</label>
+                    <input type="text" id="address" name="address" value="{{ contract.address }}" required>
+                </p>
+                <p>
+                    <label for="work_description">Наименование работ:</label>
+                    <textarea id="work_description" name="work_description" required>{{ contract.work_description }}</textarea>
+                </p>
+                <p>
                     <button type="submit" class="create-btn">Сохранить</button>
                     <a href="{{ url_for('contracts.contract_detail', id=contract.id) }}" class="cancel-btn">Отмена</a>
-                {% else %}
-                    <a href="{{ url_for('contracts.edit_contract', id=contract.id) }}" class="create-btn">Редактировать</a>
+                </p>
+            </form>
+        {% else %}
+            <div>
+                <p>
+                    <label for="number">Номер:</label>
+                    <input type="text" id="number" value="{{ contract.number }}" readonly>
+                </p>
+                <p>
+                    <label for="contract_date">Дата:</label>
+                    <input type="date" id="contract_date" value="{{ contract.contract_date | date_format }}" readonly>
+                </p>
+                <p>
+                    <label for="subject">Субъект:</label>
+                    <input type="text" id="subject" value="{{ contract.subject }}" readonly>
+                </p>
+                <p>
+                    <label for="price">Цена:</label>
+                    <input type="number" step="0.01" id="price" value="{{ contract.price }}" readonly>
+                </p>
+                <p>
+                    <label for="address">Адрес:</label>
+                    <input type="text" id="address" value="{{ contract.address }}" readonly>
+                </p>
+                <p>
+                    <label for="work_description">Наименование работ:</label>
+                    <textarea id="work_description" readonly>{{ contract.work_description }}</textarea>
+                </p>
+                <p>
+                    <button type="button" class="create-btn" onclick="window.location.href='{{ url_for('contracts.edit_contract', id=contract.id) }}'">Редактировать</button>
                     <a href="{{ url_for('contracts.list_contracts') }}" class="cancel-btn">Назад к списку</a>
-                {% endif %}
-            </p>
-        </form>
+                </p>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

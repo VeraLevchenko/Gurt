@@ -1,1 +1,0 @@
-postgres=# CREATE USER vera WITH PASSWORD '741827';
