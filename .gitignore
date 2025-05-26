@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+env/
+venv/
+ENV/
+*.venv/
+
+# Flask
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# PostgreSQL temp files
+*.pgdata
+*.pgdump
+
+# Environment variables
+.env
+*.env
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+logs/
+*.log/
+
+# Temporary files
+*.bak
+*.swp
+*~
+
+# Dependency directories
+.pip/
+pip/
+build/
+dist/

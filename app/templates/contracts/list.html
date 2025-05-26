@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Список договоров</h1>
+    <a href="{{ url_for('contracts.create_contract') }}" class="create-btn">Создать договор</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Номер</th>
+                <th>Дата</th>
+                <th>Субъект</th>
+                <th>Цена</th>
+                <th>Адрес</th>
+                <th>Наименование работ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contract in contracts %}
+                <tr onclick="window.location='{{ url_for('contracts.contract_detail', id=contract.id) }}';">
+                    <td>{{ contract.number }}</td>
+                    <td>{{ contract.contract_date }}</td>
+                    <td>{{ contract.subject }}</td>
+                    <td>{{ contract.price }}</td>
+                    <td>{{ contract.address }}</td>
+                    <td>{{ contract.work_description }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
