@@ -141,3 +141,30 @@ table tr:hover {
     font-weight: bold;
     color: #2c3e50;
 }
+
+.contract-details input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.contract-details label {
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.work-types {
+    margin-top: 10px;
+}
+
+.work-type-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.work-type-item input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.work-type-item label {
+    margin: 0;
+}

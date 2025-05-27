@@ -21,7 +21,13 @@
                     <td>{{ contract.subject }}</td>
                     <td>{{ contract.price }}</td>
                     <td>{{ contract.address }}</td>
-                    <td>{{ contract.work_description }}</td>
+                    <td>
+                        <ul>
+                            {% for work_type in contract.work_types %}
+                                <li>{{ work_type.name }} ({{ work_type.price }} руб.)</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Детали договора #{{ contract.number }}</h1>
+    <h1>Договор №{{ contract.number }}</h1>
     {% if error %}
         <p style="color: red;">{{ error }}</p>
     {% endif %}
@@ -13,7 +13,7 @@
                 </p>
                 <p>
                     <label for="contract_date">Дата:</label>
-                    <input type="date" id="contract_date" name="contract_date" value="{{ contract.contract_date | date_format }}" required>
+                    <input type="date" id="contract_date" name="contract_date" value="{{ contract.contract_date }}" required>
                 </p>
                 <p>
                     <label for="subject">Субъект:</label>
@@ -21,15 +21,25 @@
                 </p>
                 <p>
                     <label for="price">Цена:</label>
-                    <input type="number" step="0.01" id="price" name="price" value="{{ contract.price }}" required>
+                    <input type="number" step="0.01" id="price" name="price" value="{{ contract.price }}" readonly>
                 </p>
                 <p>
                     <label for="address">Адрес:</label>
                     <input type="text" id="address" name="address" value="{{ contract.address }}" required>
                 </p>
                 <p>
-                    <label for="work_description">Наименование работ:</label>
-                    <textarea id="work_description" name="work_description" required>{{ contract.work_description }}</textarea>
+                    <label>Наименование работ:</label>
+                    <div class="work-types">
+                        {% for work_type in work_types %}
+                            <div class="work-type-item">
+                                <input type="checkbox" name="work_description" value="{{ work_type.id }}"
+                                       data-price="{{ work_type.price }}" id="work_{{ work_type.id }}"
+                                       {% if work_type in contract.work_types %}checked{% endif %}
+                                       onchange="updatePrice()">
+                                <label for="work_{{ work_type.id }}">{{ work_type.name }} ({{ work_type.price }} руб.)</label>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </p>
                 <p>
                     <button type="submit" class="create-btn">Сохранить</button>
@@ -37,36 +47,49 @@
                 </p>
             </form>
         {% else %}
-            <div>
-                <p>
-                    <label for="number">Номер:</label>
-                    <input type="text" id="number" value="{{ contract.number }}" readonly>
-                </p>
-                <p>
-                    <label for="contract_date">Дата:</label>
-                    <input type="date" id="contract_date" value="{{ contract.contract_date | date_format }}" readonly>
-                </p>
-                <p>
-                    <label for="subject">Субъект:</label>
-                    <input type="text" id="subject" value="{{ contract.subject }}" readonly>
-                </p>
-                <p>
-                    <label for="price">Цена:</label>
-                    <input type="number" step="0.01" id="price" value="{{ contract.price }}" readonly>
-                </p>
-                <p>
-                    <label for="address">Адрес:</label>
-                    <input type="text" id="address" value="{{ contract.address }}" readonly>
-                </p>
-                <p>
-                    <label for="work_description">Наименование работ:</label>
-                    <textarea id="work_description" readonly>{{ contract.work_description }}</textarea>
-                </p>
-                <p>
-                    <button type="button" class="create-btn" onclick="window.location.href='{{ url_for('contracts.edit_contract', id=contract.id) }}'">Редактировать</button>
-                    <a href="{{ url_for('contracts.list_contracts') }}" class="cancel-btn">Назад к списку</a>
-                </p>
-            </div>
+            <p><strong>Номер:</strong> {{ contract.number }}</p>
+            <p><strong>Дата:</strong> {{ contract.contract_date }}</p>
+            <p><strong>Субъект:</strong> {{ contract.subject }}</p>
+            <p><strong>Цена:</strong> {{ contract.price }} руб.</p>
+            <p><strong>Адрес:</strong> {{ contract.address }}</p>
+            <p><strong>Наименование работ:</strong></p>
+            <ul>
+                {% for work_type in contract.work_types %}
+                    <li>{{ work_type.name }} ({{ work_type.price }} руб.)</li>
+                {% endfor %}
+            </ul>
+            <p>
+                <a href="{{ url_for('contracts.edit_contract', id=contract.id) }}" class="edit-btn">Редактировать</a>
+                <a href="{{ url_for('contracts.list_contracts') }}" class="back-btn">Назад</a>
+            </p>
         {% endif %}
     </div>
+    {% if edit_mode %}
+    <style>
+        .work-types {
+            margin-top: 10px;
+        }
+        .work-type-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .work-type-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .work-type-item label {
+            margin: 0;
+        }
+    </style>
+    <script>
+        function updatePrice() {
+            const checkboxes = document.querySelectorAll('input[name="work_description"]:checked');
+            let totalPrice = 0;
+            checkboxes.forEach(checkbox => {
+                totalPrice += parseFloat(checkbox.getAttribute('data-price'));
+            });
+            document.getElementById('price').value = totalPrice.toFixed(2);
+        }
+    </script>
+    {% endif %}
 {% endblock %}
