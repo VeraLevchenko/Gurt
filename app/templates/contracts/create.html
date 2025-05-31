@@ -5,19 +5,22 @@
         <p style="color: red;">{{ error }}</p>
     {% endif %}
     <div class="contract-container">
-        <div class="contract-form">
-            <form action="{{ url_for('contracts.create_contract') }}" method="post">
+        <form action="{{ url_for('contracts.create_contract') }}" method="post" onsubmit="return validateForm()">
+            <div class="contract-form">
                 <p>
                     <label for="number">Номер:</label>
-                    <input type="text" id="number" name="number" required>
+                    <input type="text" id="number" name="number" value="{{ form_data.number | default('') }}" required
+                           oninput="validateNumber(this)">
+                    <span id="number-error" style="color: red; display: none;">Номер должен быть в формате 08-0/XXXXX</span>
                 </p>
                 <p>
                     <label for="contract_date">Дата:</label>
-                    <input type="date" id="contract_date" name="contract_date" required>
+                    <input type="date" id="contract_date" name="contract_date" 
+                           value="{{ form_data.contract_date | default(today | date_format) }}" required>
                 </p>
                 <p>
                     <label for="subject">Субъект:</label>
-                    <input type="text" id="subject" name="subject" required>
+                    <input type="text" id="subject" name="subject" value="{{ form_data.subject | default('') }}" required>
                 </p>
                 <p>
                     <label for="price">Цена:</label>
@@ -25,78 +28,98 @@
                 </p>
                 <p>
                     <label for="address">Адрес:</label>
-                    <input type="text" id="address" name="address" required>
+                    <input type="text" id="address" name="address" value="{{ form_data.address | default('') }}" required>
                 </p>
-                <p>
-                    <button type="submit" class="create-btn">Сохранить</button>
-                    <a href="{{ url_for('contracts.list_contracts') }}" class="cancel-btn">Отмена</a>
-                </p>
-            </form>
-        </div>
-        <div class="work-types-container">
-            <label>Наименование работ:</label>
-            <div class="work-types">
-                {% for work_type in work_types %}
-                    <div class="work-type-item">
-                        <input type="checkbox" name="work_description" value="{{ work_type.id }}"
-                               data-price="{{ work_type.price }}" id="work_{{ work_type.id }}"
-                               onchange="updatePrice()">
-                        <label for="work_{{ work_type.id }}">{{ work_type.name }} ({{ work_type.price }} руб.)</label>
-                    </div>
-                {% endfor %}
             </div>
-        </div>
+            <div class="work-types-container">
+                <label>Наименование работ:</label>
+                <div class="work-types">
+                    {% for work_type in work_types %}
+                        <div class="work-type-item">
+                            <input type="checkbox" name="work_description" value="{{ work_type.id }}"
+                                   data-price="{{ work_type.price }}" id="work_{{ work_type.id }}"
+                                   {% if work_type.id|string in form_data.selected_work_types %}checked{% endif %}
+                                   onchange="updatePrice()">
+                            <label for="work_{{ work_type.id }}">{{ work_type.name }} ({{ work_type.price }} руб.)</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <p>
+                <button type="submit" class="create-btn">Сохранить</button>
+                <a href="{{ url_for('contracts.list_contracts') }}" class="cancel-btn">Отмена</a>
+            </p>
+        </form>
     </div>
     <style>
         .contract-container {
             display: flex;
             gap: 20px;
-            flex-wrap: wrap; /* Позволяет перенос на мобильных */
+            flex-wrap: wrap;
         }
         .contract-form {
             flex: 1;
-            min-width: 300px; /* Минимальная ширина формы */
+            min-width: 300px;
         }
         .work-types-container {
             flex: 2;
-            min-width: 300px; /* Минимальная ширина блока работ */
+            min-width: 300px;
         }
         .work-types {
             margin-top: 8px;
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Три колонки */
-            gap: 8px; /* Уменьшенное расстояние между элементами */
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
         }
         .work-type-item {
             display: flex;
             align-items: center;
-            margin-bottom: 5px; /* Уменьшенный отступ */
+            margin-bottom: 5px;
         }
         .work-type-item input[type="checkbox"] {
-            margin-right: 6px; /* Уменьшенный отступ для чекбокса */
+            margin-right: 6px;
         }
         .work-type-item label {
             margin: 0;
-            font-size: 0.85em; /* Меньший шрифт для компактности */
+            font-size: 0.85em;
             word-wrap: break-word;
         }
         @media (max-width: 768px) {
             .contract-container {
-                flex-direction: column; /* Форма и работы друг под другом */
+                flex-direction: column;
             }
             .work-types {
-                grid-template-columns: 1fr; /* Одна колонка на мобильных */
+                grid-template-columns: 1fr;
             }
         }
     </style>
     <script>
+        function validateNumber(input) {
+            const regex = /^08-0\/\d+$/;
+            const errorSpan = document.getElementById('number-error');
+            if (!regex.test(input.value)) {
+                errorSpan.style.display = 'inline';
+                input.setCustomValidity("Номер должен быть в формате 08-0/XXXXX");
+            } else {
+                errorSpan.style.display = 'none';
+                input.setCustomValidity('');
+            }
+        }
+
+        function validateForm() {
+            const numberInput = document.getElementById('number');
+            validateNumber(numberInput);
+            return numberInput.checkValidity();
+        }
+
         function updatePrice() {
             const checkboxes = document.querySelectorAll('input[name="work_description"]:checked');
             let totalPrice = 0;
             checkboxes.forEach(checkbox => {
-                totalPrice += parseFloat(checkbox.getAttribute('data-price'));
+                totalPrice += parseFloat(checkbox.getAttribute('data-price')) || 0;
             });
             document.getElementById('price').value = totalPrice.toFixed(2);
         }
+        window.addEventListener('load', updatePrice);
     </script>
 {% endblock %}
