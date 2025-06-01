@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Создать физическое лицо</h1>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form id="createPhysicalForm" method="post">
+        <p>
+            <label for="full_name">ФИО:</label>
+            <input type="text" id="full_name" name="full_name" value="{{ form_data.full_name | default('') }}" required>
+        </p>
+        <p>
+            <label for="passport">Паспорт:</label>
+            <input type="text" id="passport" name="passport" value="{{ form_data.passport | default('') }}" required>
+        </p>
+        <p>
+            <label for="address">Адрес:</label>
+            <input type="text" id="address" name="address" value="{{ form_data.address | default('') }}" required>
+        </p>
+        <p>
+            <label for="phone">Телефон:</label>
+            <input type="text" id="phone" name="phone" value="{{ form_data.phone | default('') }}" required>
+        </p>
+        <p>
+            <label for="email">Email (необязательно):</label>
+            <input type="email" id="email" name="email" value="{{ form_data.email | default('') }}">
+        </p>
+        <p>
+            <button type="submit" class="create-btn">Сохранить</button>
+            <button type="button" class="cancel-btn" onclick="window.close()">Отмена</button>
+        </p>
+    </form>
+    <script>
+        document.getElementById('createPhysicalForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            console.log('Отправка формы для создания физического лица'); // Отладка
+            const form = this;
+            const formData = new FormData(form);
+            fetch('{{ url_for("subjects.create_subject", subject_type="physical") }}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest' // Указываем AJAX-запрос
+                }
+            })
+            .then(response => {
+                console.log('Получен ответ от сервера:', response.status); // Отладка
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Ошибка сервера: ' + response.status);
+                    });
+                }
+                return response.text();
+            })
+            .then(html => {
+                console.log('HTML получен, обновляем модальное окно'); // Отладка
+                if (window.opener) {
+                    // Обновляем содержимое модального окна в родительском окне
+                    window.opener.document.getElementById('modalContent').innerHTML = html;
+                    // Открываем модальное окно
+                    window.opener.document.getElementById('subjectModal').style.display = 'block';
+                    // Убеждаемся, что модальное окно видно
+                    console.log('Модальное окно открыто в родительском окне'); // Отладка
+                    window.close();
+                } else {
+                    console.warn('Родительское окно недоступно, открываем модальное окно в текущем окне'); // Отладка
+                    let modal = document.getElementById('subjectModal');
+                    if (!modal) {
+                        modal = document.createElement('div');
+                        modal.id = 'subjectModal';
+                        modal.className = 'modal';
+                        modal.innerHTML = `
+                            <div class="modal-content">
+                                <span class="close" onclick="closeSubjectModal()">×</span>
+                                <div id="modalContent"></div>
+                            </div>
+                        `;
+                        document.body.appendChild(modal);
+                    }
+                    document.getElementById('modalContent').innerHTML = html;
+                    modal.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка при создании:', error); // Отладка
+                alert('Ошибка при создании физического лица: ' + error.message);
+            });
+        });
+
+        function closeSubjectModal() {
+            const modal = document.getElementById('subjectModal');
+            if (modal) modal.style.display = 'none';
+        }
+    </script>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 5px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+{% endblock %}

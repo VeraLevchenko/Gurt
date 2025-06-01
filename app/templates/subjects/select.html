@@ -1,0 +1,108 @@
+<h2>Выбор {{ 'физического лица' if subject_type == 'physical' else 'юридического лица' }}</h2>
+<input type="text" id="searchInput" placeholder="Поиск..." value="{{ query | default('') }}" oninput="searchSubjects()">
+<a href="#" id="createSubjectBtn" class="create-btn">Создать</a>
+<table>
+    <thead>
+        <tr>
+            {% if subject_type == 'physical' %}
+                <th>ФИО</th>
+                <th>Паспорт</th>
+                <th>Адрес</th>
+                <th>Телефон</th>
+                <th>Email</th>
+            {% else %}
+                <th>Наименование</th>
+                <th>ИНН</th>
+                <th>Юридический адрес</th>
+                <th>ФИО директора</th>
+                <th>Телефон</th>
+                <th>Email</th>
+            {% endif %}
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody id="subjectTable">
+        {% for subject in subjects %}
+            <tr {% if new_subject_id is defined and subject.id == new_subject_id %}class="new-subject"{% endif %}>
+                {% if subject_type == 'physical' %}
+                    <td>{{ subject.full_name }}</td>
+                    <td>{{ subject.passport }}</td>
+                    <td>{{ subject.address }}</td>
+                    <td>{{ subject.phone }}</td>
+                    <td>{{ subject.email or '' }}</td>
+                {% else %}
+                    <td>{{ subject.name }}</td>
+                    <td>{{ subject.inn }}</td>
+                    <td>{{ subject.legal_address }}</td>
+                    <td>{{ subject.director_full_name }}</td>
+                    <td>{{ subject.phone }}</td>
+                    <td>{{ subject.email or '' }}</td>
+                {% endif %}
+                <td>
+                    <button onclick="selectSubject('{{ subject.id }}', '{{ (subject.full_name if subject_type == 'physical' else subject.name) | escape }}')" class="create-btn">Выбрать</button>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<style>
+    .new-subject {
+        background-color: #e0f7fa;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .create-btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 8px 16px;
+        margin-right: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .create-btn:hover {
+        background-color: #45a049;
+    }
+    input[type="text"] {
+        padding: 8px;
+        margin-bottom: 10px;
+        width: 100%;
+        max-width: 300px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+</style>
+<script>
+    function searchSubjects() {
+        const query = document.getElementById('searchInput').value;
+        const subjectType = '{{ subject_type }}';
+        console.log('Поиск субъектов:', query, subjectType);
+        fetch(`/subjects/select/${subjectType}?q=${encodeURIComponent(query)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка сервера: ' + response.status);
+                }
+                return response.text();
+            })
+            .then(html => {
+                document.getElementById('modalContent').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Ошибка при поиске:', error);
+                alert('Ошибка при поиске субъектов: ' + error.message);
+            });
+    }
+</script>

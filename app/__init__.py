@@ -13,9 +13,10 @@ def create_app():
     migrate.init_app(app, db)
     
     # Импорты маршрутов после инициализации db
-    from app.routes import main, contracts
+    from app.routes import main, contracts, subjects
     app.register_blueprint(main.bp)
     app.register_blueprint(contracts.bp)
+    app.register_blueprint(subjects.bp)
     
     # Фильтр для формата даты
     @app.template_filter('date_format')

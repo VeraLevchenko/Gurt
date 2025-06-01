@@ -19,8 +19,18 @@
                            value="{{ form_data.contract_date | default(today | date_format) }}" required>
                 </p>
                 <p>
-                    <label for="subject">Субъект:</label>
-                    <input type="text" id="subject" name="subject" value="{{ form_data.subject | default('') }}" required>
+                    <label for="subject_type">Тип субъекта:</label>
+                    <select id="subject_type" name="subject_type" onchange="updateSubjectButton()" required>
+                        <option value="">Выберите тип</option>
+                        <option value="physical" {% if form_data.subject_type == 'physical' %}selected{% endif %}>Физическое лицо</option>
+                        <option value="legal" {% if form_data.subject_type == 'legal' %}selected{% endif %}>Юридическое лицо</option>
+                    </select>
+                </p>
+                <p>
+                    <label for="subject_name">Субъект:</label>
+                    <input type="text" id="subject_name" name="subject_name" value="{{ form_data.subject_name | default('') }}" readonly required>
+                    <input type="hidden" id="subject_id" name="subject_id" value="{{ form_data.subject_id | default('') }}">
+                    <button type="button" id="select_subject_btn" class="create-btn" disabled onclick="openSubjectModal()">Выбрать субъект</button>
                 </p>
                 <p>
                     <label for="price">Цена:</label>
@@ -51,6 +61,13 @@
             </p>
         </form>
     </div>
+    <!-- Модальное окно для выбора субъекта -->
+    <div id="subjectModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSubjectModal()">×</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
     <style>
         .contract-container {
             display: flex;
@@ -79,10 +96,37 @@
         .work-type-item input[type="checkbox"] {
             margin-right: 6px;
         }
-        .work-type-item label {
-            margin: 0;
-            font-size: 0.85em;
-            word-wrap: break-word;
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 5px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
         }
         @media (max-width: 768px) {
             .contract-container {
@@ -109,7 +153,7 @@
         function validateForm() {
             const numberInput = document.getElementById('number');
             validateNumber(numberInput);
-            return numberInput.checkValidity();
+            return numberInput.checkValidity() && document.getElementById('subject_id').value !== '';
         }
 
         function updatePrice() {
@@ -120,6 +164,83 @@
             });
             document.getElementById('price').value = totalPrice.toFixed(2);
         }
-        window.addEventListener('load', updatePrice);
+
+        function updateSubjectButton() {
+            const subjectType = document.getElementById('subject_type').value;
+            const selectBtn = document.getElementById('select_subject_btn');
+            selectBtn.disabled = !subjectType;
+        }
+
+        function openSubjectModal() {
+            const subjectType = document.getElementById('subject_type').value;
+            if (!subjectType) return;
+            console.log('Открытие модального окна для:', subjectType); // Отладка
+            const modal = document.getElementById('subjectModal');
+            const modalContent = document.getElementById('modalContent');
+            fetch(`/subjects/select/${subjectType}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Ошибка сервера: ' + response.status);
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    modalContent.innerHTML = html;
+                    modal.style.display = 'block';
+                    // Привязываем обработчик для кнопки "Создать"
+                    attachCreateButtonListener(subjectType);
+                })
+                .catch(error => {
+                    console.error('Ошибка при открытии модального окна:', error);
+                });
+        }
+
+        function closeSubjectModal() {
+            document.getElementById('subjectModal').style.display = 'none';
+        }
+
+        function selectSubject(id, name) {
+            document.getElementById('subject_id').value = id;
+            document.getElementById('subject_name').value = name;
+            closeSubjectModal();
+        }
+
+        function openCreateSubjectWindow(subjectType) {
+            console.log('Открытие окна создания для:', subjectType); // Отладка
+            const createUrl = `/subjects/create/${subjectType}`;
+            console.log('URL для создания:', createUrl); // Отладка
+            const createWindow = window.open(createUrl, 'createSubject', 'width=600,height=500');
+            if (!createWindow) {
+                console.error('Не удалось открыть всплывающее окно.');
+                alert('Разрешите всплывающие окна.');
+            }
+        }
+
+        function attachCreateButtonListener(subjectType) {
+            const createButton = document.getElementById('createSubjectBtn');
+            if (createButton) {
+                console.log('Привязка обработчика для кнопки "Создать"'); // Отладка
+                createButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Кнопка "Создать" нажата'); // Отладка
+                    openCreateSubjectWindow(subjectType);
+                });
+            } else {
+                console.error('Кнопка "createSubjectBtn" не найдена'); // Отладка
+            }
+        }
+
+        window.addEventListener('load', () => {
+            console.log('Страница create.html загружена'); // Отладка
+            updatePrice();
+            updateSubjectButton();
+            const urlParams = new URLSearchParams(window.location.search);
+            const subjectType = urlParams.get('openModal');
+            if (subjectType) {
+                document.getElementById('subject_type').value = subjectType;
+                updateSubjectButton();
+                openSubjectModal();
+            }
+        });
     </script>
 {% endblock %}

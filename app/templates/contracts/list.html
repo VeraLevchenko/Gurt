@@ -18,7 +18,7 @@
                 <tr onclick="window.location='{{ url_for('contracts.contract_detail', id=contract.id) }}';">
                     <td>{{ contract.number }}</td>
                     <td>{{ contract.contract_date }}</td>
-                    <td>{{ contract.subject }}</td>
+                    <td>{{ contract.get_subject() }}</td>
                     <td>{{ contract.price }}</td>
                     <td>{{ contract.address }}</td>
                     <td>
