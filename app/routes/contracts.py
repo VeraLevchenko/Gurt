@@ -158,3 +158,16 @@ def edit_contract(id):
         'selected_work_types': [str(work_type.id) for work_type in contract.work_types]
     }
     return render_template('contracts/detail.html', contract=contract, edit_mode=True, work_types=work_types, form_data=form_data)
+
+@bp.route('/<int:id>/delete', methods=['POST'])
+def delete_contract(id):
+    from ..models.contracts import Contract
+    contract = Contract.query.get_or_404(id)
+    try:
+        db.session.delete(contract)
+        db.session.commit()
+        return redirect(url_for('contracts.list_contracts'))
+    except Exception as e:
+        db.session.rollback()
+        return render_template('contracts/detail.html', contract=contract, edit_mode=False, 
+                             error=f"Ошибка удаления договора: {str(e)}")

@@ -1,0 +1,102 @@
+.
+├── .dist
+├── .env
+├── .gitignore
+├── README.md
+├── ToDo
+├── app
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-38.pyc
+│   │   └── config.cpython-38.pyc
+│   ├── config.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-38.pyc
+│   │   │   ├── contracts.cpython-38.pyc
+│   │   │   └── work_types.cpython-38.pyc
+│   │   ├── contracts.py
+│   │   ├── incoming.py
+│   │   ├── outgoing.py
+│   │   └── work_types.py
+│   ├── prompt.txt
+│   ├── routes
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-38.pyc
+│   │   │   ├── contracts.cpython-38.pyc
+│   │   │   └── main.cpython-38.pyc
+│   │   ├── contracts.py
+│   │   ├── incoming.py
+│   │   ├── main.py
+│   │   └── outgoing.py
+│   ├── services
+│   │   ├── __init__.py
+│   │   ├── crypto.py
+│   │   └── search.py
+│   ├── static
+│   │   ├── css
+│   │   │   └── style.css
+│   │   └── js
+│   │       └── script.js
+│   └── templates
+│       ├── base.html
+│       ├── contracts
+│       │   ├── create.html
+│       │   ├── detail.html
+│       │   └── list.html
+│       ├── incoming
+│       │   ├── add.html
+│       │   └── list.html
+│       ├── index.html
+│       └── outgoing
+│           ├── add.html
+│           └── list.html
+├── app.py
+├── import_tariffs.py
+├── migrations
+│   ├── README
+│   ├── __pycache__
+│   │   └── env.cpython-38.pyc
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions
+│       ├── 43fa26595b36_add_unit_and_price_with_vat_to_worktype.py
+│       ├── 65e3da171252_.py
+│       ├── 9dc158cbe837_add_worktype_and_many_to_many_.py
+│       └── __pycache__
+│           ├── 43fa26595b36_add_unit_and_price_with_vat_to_worktype.cpython-38.pyc
+│           ├── 65e3da171252_.cpython-38.pyc
+│           └── 9dc158cbe837_add_worktype_and_many_to_many_.cpython-38.pyc
+├── requirements.txt
+├── structure.txt
+├── tests
+│   ├── __init__.py
+│   ├── test_contracts.py
+│   ├── test_incoming.py
+│   └── test_outgoing.py
+├── venv
+│   ├── bin
+│   │   ├── Activate.ps1
+│   │   ├── activate
+│   │   ├── activate.csh
+│   │   ├── activate.fish
+│   │   ├── alembic
+│   │   ├── dotenv
+│   │   ├── easy_install
+│   │   ├── easy_install-3.8
+│   │   ├── flask
+│   │   ├── mako-render
+│   │   ├── pip
+│   │   ├── pip3
+│   │   ├── pip3.8
+│   │   ├── py.test
+│   │   ├── pytest
+│   │   ├── python -> /usr/bin/python
+│   │   └── python3 -> python
+│   
+└── Тарифы.docx
+
+352 directories, 2663 files

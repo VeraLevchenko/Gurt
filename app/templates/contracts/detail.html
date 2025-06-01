@@ -64,53 +64,14 @@
                 <li>{{ work_type.name }} ({{ work_type.price }} руб.)</li>
             {% endfor %}
         </ul>
-        <p>
-            <a href="{{ url_for('contracts.edit_contract', id=contract.id) }}" class="edit-btn">Редактировать</a>
-            <a href="{{ url_for('contracts.list_contracts') }}" class="cancel-btn">Назад</a>
-        </p>
+        <div class="button-container">
+            <a href="{{ url_for('contracts.edit_contract', id=contract.id) }}" class="create-btn">Редактировать</a>
+            <a href="{{ url_for('contracts.list_contracts') }}" class="cancel-btn">Отмена</a>
+            <form action="{{ url_for('contracts.delete_contract', id=contract.id) }}" method="post" style="display: inline;">
+                <button type="submit" class="delete-btn" onclick="return confirm('Вы уверены, что хотите удалить договор?');">Удалить</button>
+            </form>
+        </div>
     {% endif %}
-    <style>
-        .contract-container {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .contract-form {
-            flex: 1;
-            min-width: 300px;
-        }
-        .work-types-container {
-            flex: 2;
-            min-width: 300px;
-        }
-        .work-types {
-            margin-top: 8px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-        .work-type-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-        .work-type-item input[type="checkbox"] {
-            margin-right: 6px;
-        }
-        .work-type-item label {
-            margin: 0;
-            font-size: 0.85em;
-            word-wrap: break-word;
-        }
-        @media (max-width: 768px) {
-            .contract-container {
-                flex-direction: column;
-            }
-            .work-types {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
     <script>
         function validateNumber(input) {
             const regex = /^08-0\/\d+$/;
