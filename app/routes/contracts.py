@@ -1,8 +1,11 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, send_file
 from .. import db
 from datetime import datetime, date
 from sqlalchemy.exc import IntegrityError
 import re
+import io
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
 
 bp = Blueprint('contracts', __name__, url_prefix='/contracts')
 
@@ -15,6 +18,43 @@ def list_contracts():
     from ..models.contracts import Contract
     contracts = Contract.query.all()
     return render_template('contracts/list.html', contracts=contracts)
+
+@bp.route('/download_excel')
+def download_excel():
+    from ..models.contracts import Contract
+    contracts = Contract.query.all()
+
+    # Создаем новый Excel-файл
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Договоры"
+
+    # Заголовки столбцов
+    headers = ['Номер', 'Дата', 'Субъект', 'Цена', 'Адрес', 'Наименование работ']
+    for col_num, header in enumerate(headers, 1):
+        ws[f'{get_column_letter(col_num)}1'] = header
+
+    # Заполняем данные
+    for row_num, contract in enumerate(contracts, 2):
+        ws[f'A{row_num}'] = contract.number
+        ws[f'B{row_num}'] = contract.contract_date.strftime('%Y-%m-%d')
+        ws[f'C{row_num}'] = contract.get_subject()
+        ws[f'D{row_num}'] = contract.price
+        ws[f'E{row_num}'] = contract.address
+        ws[f'F{row_num}'] = '; '.join([f"{wt.name} ({wt.price} руб.)" for wt in contract.work_types])
+
+    # Сохраняем файл в буфер
+    output = io.BytesIO()
+    wb.save(output)
+    output.seek(0)
+
+    # Отправляем файл для скачивания
+    return send_file(
+        output,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        as_attachment=True,
+        download_name='contracts.xlsx'
+    )
 
 @bp.route('/<int:id>')
 def contract_detail(id):

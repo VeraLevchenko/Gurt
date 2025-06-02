@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>Список договоров</h1>
-    <a href="{{ url_for('contracts.create_contract') }}" class="create-btn">Создать договор</a>
+    <div class="button-container">
+        <a href="{{ url_for('contracts.create_contract') }}" class="create-btn">Создать договор</a>
+        <a href="{{ url_for('contracts.download_excel') }}" class="create-btn">Скачать</a>
+    </div>
     <table>
         <thead>
             <tr>
