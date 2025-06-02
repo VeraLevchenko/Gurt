@@ -9,6 +9,9 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
     app.config.from_object('app.config.Config')
+    app.config['JSON_AS_ASCII'] = False  # Для JSON-ответов
+    app.config['DEFAULT_CHARSET'] = 'utf-8'  # Установить UTF-8 для ответов
+
     db.init_app(app)
     migrate.init_app(app, db)
     

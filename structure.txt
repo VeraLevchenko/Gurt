@@ -61,6 +61,8 @@
 │       └── subjects
 │           ├── create_legal.html
 │           ├── create_physical.html
+│           ├── legal_entities_list.html
+│           ├── physical_persons_list.html
 │           └── select.html
 ├── app.py
 ├── import_tariffs.py
@@ -786,6 +788,23 @@
 │   │           │   ├── variables.py
 │   │           │   └── version.py
 │   │           ├── easy_install.py
+│   │           ├── et_xmlfile
+│   │           │   ├── __init__.py
+│   │           │   ├── __pycache__
+│   │           │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   ├── incremental_tree.cpython-38.pyc
+│   │           │   │   └── xmlfile.cpython-38.pyc
+│   │           │   ├── incremental_tree.py
+│   │           │   └── xmlfile.py
+│   │           ├── et_xmlfile-2.0.0.dist-info
+│   │           │   ├── AUTHORS.txt
+│   │           │   ├── INSTALLER
+│   │           │   ├── LICENCE.python
+│   │           │   ├── LICENCE.rst
+│   │           │   ├── METADATA
+│   │           │   ├── RECORD
+│   │           │   ├── WHEEL
+│   │           │   └── top_level.txt
 │   │           ├── exceptiongroup
 │   │           │   ├── __init__.py
 │   │           │   ├── __pycache__
@@ -1594,6 +1613,433 @@
 │   │           │   ├── _speedups.cpython-38-x86_64-linux-gnu.so
 │   │           │   ├── _speedups.pyi
 │   │           │   └── py.typed
+│   │           ├── openpyxl
+│   │           │   ├── __init__.py
+│   │           │   ├── __pycache__
+│   │           │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   └── _constants.cpython-38.pyc
+│   │           │   ├── _constants.py
+│   │           │   ├── cell
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── _writer.cpython-38.pyc
+│   │           │   │   │   ├── cell.cpython-38.pyc
+│   │           │   │   │   ├── read_only.cpython-38.pyc
+│   │           │   │   │   ├── rich_text.cpython-38.pyc
+│   │           │   │   │   └── text.cpython-38.pyc
+│   │           │   │   ├── _writer.py
+│   │           │   │   ├── cell.py
+│   │           │   │   ├── read_only.py
+│   │           │   │   ├── rich_text.py
+│   │           │   │   └── text.py
+│   │           │   ├── chart
+│   │           │   │   ├── _3d.py
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── _3d.cpython-38.pyc
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── _chart.cpython-38.pyc
+│   │           │   │   │   ├── area_chart.cpython-38.pyc
+│   │           │   │   │   ├── axis.cpython-38.pyc
+│   │           │   │   │   ├── bar_chart.cpython-38.pyc
+│   │           │   │   │   ├── bubble_chart.cpython-38.pyc
+│   │           │   │   │   ├── chartspace.cpython-38.pyc
+│   │           │   │   │   ├── data_source.cpython-38.pyc
+│   │           │   │   │   ├── descriptors.cpython-38.pyc
+│   │           │   │   │   ├── error_bar.cpython-38.pyc
+│   │           │   │   │   ├── label.cpython-38.pyc
+│   │           │   │   │   ├── layout.cpython-38.pyc
+│   │           │   │   │   ├── legend.cpython-38.pyc
+│   │           │   │   │   ├── line_chart.cpython-38.pyc
+│   │           │   │   │   ├── marker.cpython-38.pyc
+│   │           │   │   │   ├── picture.cpython-38.pyc
+│   │           │   │   │   ├── pie_chart.cpython-38.pyc
+│   │           │   │   │   ├── pivot.cpython-38.pyc
+│   │           │   │   │   ├── plotarea.cpython-38.pyc
+│   │           │   │   │   ├── print_settings.cpython-38.pyc
+│   │           │   │   │   ├── radar_chart.cpython-38.pyc
+│   │           │   │   │   ├── reader.cpython-38.pyc
+│   │           │   │   │   ├── reference.cpython-38.pyc
+│   │           │   │   │   ├── scatter_chart.cpython-38.pyc
+│   │           │   │   │   ├── series.cpython-38.pyc
+│   │           │   │   │   ├── series_factory.cpython-38.pyc
+│   │           │   │   │   ├── shapes.cpython-38.pyc
+│   │           │   │   │   ├── stock_chart.cpython-38.pyc
+│   │           │   │   │   ├── surface_chart.cpython-38.pyc
+│   │           │   │   │   ├── text.cpython-38.pyc
+│   │           │   │   │   ├── title.cpython-38.pyc
+│   │           │   │   │   ├── trendline.cpython-38.pyc
+│   │           │   │   │   └── updown_bars.cpython-38.pyc
+│   │           │   │   ├── _chart.py
+│   │           │   │   ├── area_chart.py
+│   │           │   │   ├── axis.py
+│   │           │   │   ├── bar_chart.py
+│   │           │   │   ├── bubble_chart.py
+│   │           │   │   ├── chartspace.py
+│   │           │   │   ├── data_source.py
+│   │           │   │   ├── descriptors.py
+│   │           │   │   ├── error_bar.py
+│   │           │   │   ├── label.py
+│   │           │   │   ├── layout.py
+│   │           │   │   ├── legend.py
+│   │           │   │   ├── line_chart.py
+│   │           │   │   ├── marker.py
+│   │           │   │   ├── picture.py
+│   │           │   │   ├── pie_chart.py
+│   │           │   │   ├── pivot.py
+│   │           │   │   ├── plotarea.py
+│   │           │   │   ├── print_settings.py
+│   │           │   │   ├── radar_chart.py
+│   │           │   │   ├── reader.py
+│   │           │   │   ├── reference.py
+│   │           │   │   ├── scatter_chart.py
+│   │           │   │   ├── series.py
+│   │           │   │   ├── series_factory.py
+│   │           │   │   ├── shapes.py
+│   │           │   │   ├── stock_chart.py
+│   │           │   │   ├── surface_chart.py
+│   │           │   │   ├── text.py
+│   │           │   │   ├── title.py
+│   │           │   │   ├── trendline.py
+│   │           │   │   └── updown_bars.py
+│   │           │   ├── chartsheet
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── chartsheet.cpython-38.pyc
+│   │           │   │   │   ├── custom.cpython-38.pyc
+│   │           │   │   │   ├── properties.cpython-38.pyc
+│   │           │   │   │   ├── protection.cpython-38.pyc
+│   │           │   │   │   ├── publish.cpython-38.pyc
+│   │           │   │   │   ├── relation.cpython-38.pyc
+│   │           │   │   │   └── views.cpython-38.pyc
+│   │           │   │   ├── chartsheet.py
+│   │           │   │   ├── custom.py
+│   │           │   │   ├── properties.py
+│   │           │   │   ├── protection.py
+│   │           │   │   ├── publish.py
+│   │           │   │   ├── relation.py
+│   │           │   │   └── views.py
+│   │           │   ├── comments
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── author.cpython-38.pyc
+│   │           │   │   │   ├── comment_sheet.cpython-38.pyc
+│   │           │   │   │   ├── comments.cpython-38.pyc
+│   │           │   │   │   └── shape_writer.cpython-38.pyc
+│   │           │   │   ├── author.py
+│   │           │   │   ├── comment_sheet.py
+│   │           │   │   ├── comments.py
+│   │           │   │   └── shape_writer.py
+│   │           │   ├── compat
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── abc.cpython-38.pyc
+│   │           │   │   │   ├── numbers.cpython-38.pyc
+│   │           │   │   │   ├── product.cpython-38.pyc
+│   │           │   │   │   ├── singleton.cpython-38.pyc
+│   │           │   │   │   └── strings.cpython-38.pyc
+│   │           │   │   ├── abc.py
+│   │           │   │   ├── numbers.py
+│   │           │   │   ├── product.py
+│   │           │   │   ├── singleton.py
+│   │           │   │   └── strings.py
+│   │           │   ├── descriptors
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── base.cpython-38.pyc
+│   │           │   │   │   ├── container.cpython-38.pyc
+│   │           │   │   │   ├── excel.cpython-38.pyc
+│   │           │   │   │   ├── namespace.cpython-38.pyc
+│   │           │   │   │   ├── nested.cpython-38.pyc
+│   │           │   │   │   ├── sequence.cpython-38.pyc
+│   │           │   │   │   ├── serialisable.cpython-38.pyc
+│   │           │   │   │   └── slots.cpython-38.pyc
+│   │           │   │   ├── base.py
+│   │           │   │   ├── container.py
+│   │           │   │   ├── excel.py
+│   │           │   │   ├── namespace.py
+│   │           │   │   ├── nested.py
+│   │           │   │   ├── sequence.py
+│   │           │   │   ├── serialisable.py
+│   │           │   │   └── slots.py
+│   │           │   ├── drawing
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── colors.cpython-38.pyc
+│   │           │   │   │   ├── connector.cpython-38.pyc
+│   │           │   │   │   ├── drawing.cpython-38.pyc
+│   │           │   │   │   ├── effect.cpython-38.pyc
+│   │           │   │   │   ├── fill.cpython-38.pyc
+│   │           │   │   │   ├── geometry.cpython-38.pyc
+│   │           │   │   │   ├── graphic.cpython-38.pyc
+│   │           │   │   │   ├── image.cpython-38.pyc
+│   │           │   │   │   ├── line.cpython-38.pyc
+│   │           │   │   │   ├── picture.cpython-38.pyc
+│   │           │   │   │   ├── properties.cpython-38.pyc
+│   │           │   │   │   ├── relation.cpython-38.pyc
+│   │           │   │   │   ├── spreadsheet_drawing.cpython-38.pyc
+│   │           │   │   │   ├── text.cpython-38.pyc
+│   │           │   │   │   └── xdr.cpython-38.pyc
+│   │           │   │   ├── colors.py
+│   │           │   │   ├── connector.py
+│   │           │   │   ├── drawing.py
+│   │           │   │   ├── effect.py
+│   │           │   │   ├── fill.py
+│   │           │   │   ├── geometry.py
+│   │           │   │   ├── graphic.py
+│   │           │   │   ├── image.py
+│   │           │   │   ├── line.py
+│   │           │   │   ├── picture.py
+│   │           │   │   ├── properties.py
+│   │           │   │   ├── relation.py
+│   │           │   │   ├── spreadsheet_drawing.py
+│   │           │   │   ├── text.py
+│   │           │   │   └── xdr.py
+│   │           │   ├── formatting
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── formatting.cpython-38.pyc
+│   │           │   │   │   └── rule.cpython-38.pyc
+│   │           │   │   ├── formatting.py
+│   │           │   │   └── rule.py
+│   │           │   ├── formula
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── tokenizer.cpython-38.pyc
+│   │           │   │   │   └── translate.cpython-38.pyc
+│   │           │   │   ├── tokenizer.py
+│   │           │   │   └── translate.py
+│   │           │   ├── packaging
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── core.cpython-38.pyc
+│   │           │   │   │   ├── custom.cpython-38.pyc
+│   │           │   │   │   ├── extended.cpython-38.pyc
+│   │           │   │   │   ├── interface.cpython-38.pyc
+│   │           │   │   │   ├── manifest.cpython-38.pyc
+│   │           │   │   │   ├── relationship.cpython-38.pyc
+│   │           │   │   │   └── workbook.cpython-38.pyc
+│   │           │   │   ├── core.py
+│   │           │   │   ├── custom.py
+│   │           │   │   ├── extended.py
+│   │           │   │   ├── interface.py
+│   │           │   │   ├── manifest.py
+│   │           │   │   ├── relationship.py
+│   │           │   │   └── workbook.py
+│   │           │   ├── pivot
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── cache.cpython-38.pyc
+│   │           │   │   │   ├── fields.cpython-38.pyc
+│   │           │   │   │   ├── record.cpython-38.pyc
+│   │           │   │   │   └── table.cpython-38.pyc
+│   │           │   │   ├── cache.py
+│   │           │   │   ├── fields.py
+│   │           │   │   ├── record.py
+│   │           │   │   └── table.py
+│   │           │   ├── reader
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── drawings.cpython-38.pyc
+│   │           │   │   │   ├── excel.cpython-38.pyc
+│   │           │   │   │   ├── strings.cpython-38.pyc
+│   │           │   │   │   └── workbook.cpython-38.pyc
+│   │           │   │   ├── drawings.py
+│   │           │   │   ├── excel.py
+│   │           │   │   ├── strings.py
+│   │           │   │   └── workbook.py
+│   │           │   ├── styles
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── alignment.cpython-38.pyc
+│   │           │   │   │   ├── borders.cpython-38.pyc
+│   │           │   │   │   ├── builtins.cpython-38.pyc
+│   │           │   │   │   ├── cell_style.cpython-38.pyc
+│   │           │   │   │   ├── colors.cpython-38.pyc
+│   │           │   │   │   ├── differential.cpython-38.pyc
+│   │           │   │   │   ├── fills.cpython-38.pyc
+│   │           │   │   │   ├── fonts.cpython-38.pyc
+│   │           │   │   │   ├── named_styles.cpython-38.pyc
+│   │           │   │   │   ├── numbers.cpython-38.pyc
+│   │           │   │   │   ├── protection.cpython-38.pyc
+│   │           │   │   │   ├── proxy.cpython-38.pyc
+│   │           │   │   │   ├── styleable.cpython-38.pyc
+│   │           │   │   │   ├── stylesheet.cpython-38.pyc
+│   │           │   │   │   └── table.cpython-38.pyc
+│   │           │   │   ├── alignment.py
+│   │           │   │   ├── borders.py
+│   │           │   │   ├── builtins.py
+│   │           │   │   ├── cell_style.py
+│   │           │   │   ├── colors.py
+│   │           │   │   ├── differential.py
+│   │           │   │   ├── fills.py
+│   │           │   │   ├── fonts.py
+│   │           │   │   ├── named_styles.py
+│   │           │   │   ├── numbers.py
+│   │           │   │   ├── protection.py
+│   │           │   │   ├── proxy.py
+│   │           │   │   ├── styleable.py
+│   │           │   │   ├── stylesheet.py
+│   │           │   │   └── table.py
+│   │           │   ├── utils
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── bound_dictionary.cpython-38.pyc
+│   │           │   │   │   ├── cell.cpython-38.pyc
+│   │           │   │   │   ├── dataframe.cpython-38.pyc
+│   │           │   │   │   ├── datetime.cpython-38.pyc
+│   │           │   │   │   ├── escape.cpython-38.pyc
+│   │           │   │   │   ├── exceptions.cpython-38.pyc
+│   │           │   │   │   ├── formulas.cpython-38.pyc
+│   │           │   │   │   ├── indexed_list.cpython-38.pyc
+│   │           │   │   │   ├── inference.cpython-38.pyc
+│   │           │   │   │   ├── protection.cpython-38.pyc
+│   │           │   │   │   └── units.cpython-38.pyc
+│   │           │   │   ├── bound_dictionary.py
+│   │           │   │   ├── cell.py
+│   │           │   │   ├── dataframe.py
+│   │           │   │   ├── datetime.py
+│   │           │   │   ├── escape.py
+│   │           │   │   ├── exceptions.py
+│   │           │   │   ├── formulas.py
+│   │           │   │   ├── indexed_list.py
+│   │           │   │   ├── inference.py
+│   │           │   │   ├── protection.py
+│   │           │   │   └── units.py
+│   │           │   ├── workbook
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── _writer.cpython-38.pyc
+│   │           │   │   │   ├── child.cpython-38.pyc
+│   │           │   │   │   ├── defined_name.cpython-38.pyc
+│   │           │   │   │   ├── external_reference.cpython-38.pyc
+│   │           │   │   │   ├── function_group.cpython-38.pyc
+│   │           │   │   │   ├── properties.cpython-38.pyc
+│   │           │   │   │   ├── protection.cpython-38.pyc
+│   │           │   │   │   ├── smart_tags.cpython-38.pyc
+│   │           │   │   │   ├── views.cpython-38.pyc
+│   │           │   │   │   ├── web.cpython-38.pyc
+│   │           │   │   │   └── workbook.cpython-38.pyc
+│   │           │   │   ├── _writer.py
+│   │           │   │   ├── child.py
+│   │           │   │   ├── defined_name.py
+│   │           │   │   ├── external_link
+│   │           │   │   │   ├── __init__.py
+│   │           │   │   │   ├── __pycache__
+│   │           │   │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   │   └── external.cpython-38.pyc
+│   │           │   │   │   └── external.py
+│   │           │   │   ├── external_reference.py
+│   │           │   │   ├── function_group.py
+│   │           │   │   ├── properties.py
+│   │           │   │   ├── protection.py
+│   │           │   │   ├── smart_tags.py
+│   │           │   │   ├── views.py
+│   │           │   │   ├── web.py
+│   │           │   │   └── workbook.py
+│   │           │   ├── worksheet
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── _read_only.cpython-38.pyc
+│   │           │   │   │   ├── _reader.cpython-38.pyc
+│   │           │   │   │   ├── _write_only.cpython-38.pyc
+│   │           │   │   │   ├── _writer.cpython-38.pyc
+│   │           │   │   │   ├── cell_range.cpython-38.pyc
+│   │           │   │   │   ├── cell_watch.cpython-38.pyc
+│   │           │   │   │   ├── controls.cpython-38.pyc
+│   │           │   │   │   ├── copier.cpython-38.pyc
+│   │           │   │   │   ├── custom.cpython-38.pyc
+│   │           │   │   │   ├── datavalidation.cpython-38.pyc
+│   │           │   │   │   ├── dimensions.cpython-38.pyc
+│   │           │   │   │   ├── drawing.cpython-38.pyc
+│   │           │   │   │   ├── errors.cpython-38.pyc
+│   │           │   │   │   ├── filters.cpython-38.pyc
+│   │           │   │   │   ├── formula.cpython-38.pyc
+│   │           │   │   │   ├── header_footer.cpython-38.pyc
+│   │           │   │   │   ├── hyperlink.cpython-38.pyc
+│   │           │   │   │   ├── merge.cpython-38.pyc
+│   │           │   │   │   ├── ole.cpython-38.pyc
+│   │           │   │   │   ├── page.cpython-38.pyc
+│   │           │   │   │   ├── pagebreak.cpython-38.pyc
+│   │           │   │   │   ├── picture.cpython-38.pyc
+│   │           │   │   │   ├── print_settings.cpython-38.pyc
+│   │           │   │   │   ├── properties.cpython-38.pyc
+│   │           │   │   │   ├── protection.cpython-38.pyc
+│   │           │   │   │   ├── related.cpython-38.pyc
+│   │           │   │   │   ├── scenario.cpython-38.pyc
+│   │           │   │   │   ├── smart_tag.cpython-38.pyc
+│   │           │   │   │   ├── table.cpython-38.pyc
+│   │           │   │   │   ├── views.cpython-38.pyc
+│   │           │   │   │   └── worksheet.cpython-38.pyc
+│   │           │   │   ├── _read_only.py
+│   │           │   │   ├── _reader.py
+│   │           │   │   ├── _write_only.py
+│   │           │   │   ├── _writer.py
+│   │           │   │   ├── cell_range.py
+│   │           │   │   ├── cell_watch.py
+│   │           │   │   ├── controls.py
+│   │           │   │   ├── copier.py
+│   │           │   │   ├── custom.py
+│   │           │   │   ├── datavalidation.py
+│   │           │   │   ├── dimensions.py
+│   │           │   │   ├── drawing.py
+│   │           │   │   ├── errors.py
+│   │           │   │   ├── filters.py
+│   │           │   │   ├── formula.py
+│   │           │   │   ├── header_footer.py
+│   │           │   │   ├── hyperlink.py
+│   │           │   │   ├── merge.py
+│   │           │   │   ├── ole.py
+│   │           │   │   ├── page.py
+│   │           │   │   ├── pagebreak.py
+│   │           │   │   ├── picture.py
+│   │           │   │   ├── print_settings.py
+│   │           │   │   ├── properties.py
+│   │           │   │   ├── protection.py
+│   │           │   │   ├── related.py
+│   │           │   │   ├── scenario.py
+│   │           │   │   ├── smart_tag.py
+│   │           │   │   ├── table.py
+│   │           │   │   ├── views.py
+│   │           │   │   └── worksheet.py
+│   │           │   ├── writer
+│   │           │   │   ├── __init__.py
+│   │           │   │   ├── __pycache__
+│   │           │   │   │   ├── __init__.cpython-38.pyc
+│   │           │   │   │   ├── excel.cpython-38.pyc
+│   │           │   │   │   └── theme.cpython-38.pyc
+│   │           │   │   ├── excel.py
+│   │           │   │   └── theme.py
+│   │           │   └── xml
+│   │           │       ├── __init__.py
+│   │           │       ├── __pycache__
+│   │           │       │   ├── __init__.cpython-38.pyc
+│   │           │       │   ├── constants.cpython-38.pyc
+│   │           │       │   └── functions.cpython-38.pyc
+│   │           │       ├── constants.py
+│   │           │       └── functions.py
+│   │           ├── openpyxl-3.1.5.dist-info
+│   │           │   ├── INSTALLER
+│   │           │   ├── LICENCE.rst
+│   │           │   ├── METADATA
+│   │           │   ├── RECORD
+│   │           │   ├── WHEEL
+│   │           │   └── top_level.txt
 │   │           ├── packaging
 │   │           │   ├── __init__.py
 │   │           │   ├── __pycache__
@@ -3026,4 +3472,4 @@
 │           └── wheel-0.34.2-py2.py3-none-any.whl
 └── Тарифы.docx
 
-353 directories, 2673 files
+397 directories, 3075 files

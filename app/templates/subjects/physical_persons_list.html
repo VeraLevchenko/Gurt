@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Список физических лиц</h1>
+    <div class="button-container">
+        <a href="{{ url_for('subjects.create_subject', subject_type='physical', redirect='list') }}" class="create-btn">Создать</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ФИО</th>
+                <th>Паспорт</th>
+                <th>Телефон</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for person in physical_persons %}
+                <tr>
+                    <td>{{ person.id }}</td>
+                    <td>{{ person.full_name }}</td>
+                    <td>{{ person.passport }}</td>
+                    <td>{{ person.phone }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Список юридических лиц</h1>
+    <div class="button-container">
+        <a href="{{ url_for('subjects.create_subject', subject_type='legal', redirect='list') }}" class="create-btn">Создать</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Наименование</th>
+                <th>ИНН</th>
+                <th>Телефон</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entity in legal_entities %}
+                <tr>
+                    <td>{{ entity.id }}</td>
+                    <td>{{ entity.name }}</td>
+                    <td>{{ entity.inn }}</td>
+                    <td>{{ entity.phone }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
