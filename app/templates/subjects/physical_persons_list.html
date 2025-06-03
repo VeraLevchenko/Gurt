@@ -15,7 +15,7 @@
         </thead>
         <tbody>
             {% for person in physical_persons %}
-                <tr>
+                <tr onclick="window.location='{{ url_for('subjects.subject_detail', subject_type='physical', id=person.id) }}'" style="cursor: pointer;">
                     <td>{{ person.id }}</td>
                     <td>{{ person.full_name }}</td>
                     <td>{{ person.passport }}</td>

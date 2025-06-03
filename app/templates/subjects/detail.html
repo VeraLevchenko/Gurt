@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>{% if edit_mode %}Редактировать {{ 'физическое лицо' if subject_type == 'physical' else 'юридическое лицо' }}{% else %}Детали {{ 'физического лица' if subject_type == 'physical' else 'юридического лица' }}{% endif %}</h1>
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+    {% if edit_mode %}
+        <div class="contract-container">
+            <form action="{{ url_for('subjects.edit_subject', subject_type=subject_type, id=subject.id) }}" method="post">
+                <div class="contract-form">
+                    {% if subject_type == 'physical' %}
+                        <p>
+                            <label for="full_name">ФИО:</label>
+                            <input type="text" id="full_name" name="full_name" value="{{ form_data.full_name | default(subject.full_name) }}" required>
+                        </p>
+                        <p>
+                            <label for="passport">Паспорт:</label>
+                            <input type="text" id="passport" name="passport" value="{{ form_data.passport | default(subject.passport) }}" required>
+                        </p>
+                        <p>
+                            <label for="address">Адрес:</label>
+                            <input type="text" id="address" name="address" value="{{ form_data.address | default(subject.address) }}" required>
+                        </p>
+                        <p>
+                            <label for="phone">Телефон:</label>
+                            <input type="text" id="phone" name="phone" value="{{ form_data.phone | default(subject.phone) }}" required>
+                        </p>
+                        <p>
+                            <label for="email">Email (необязательно):</label>
+                            <input type="email" id="email" name="email" value="{{ form_data.email | default(subject.email or '') }}">
+                        </p>
+                    {% else %}
+                        <p>
+                            <label for="name">Наименование:</label>
+                            <input type="text" id="name" name="name" value="{{ form_data.name | default(subject.name) }}" required>
+                        </p>
+                        <p>
+                            <label for="inn">ИНН:</label>
+                            <input type="text" id="inn" name="inn" value="{{ form_data.inn | default(subject.inn) }}" required>
+                        </p>
+                        <p>
+                            <label for="legal_address">Юридический адрес:</label>
+                            <input type="text" id="legal_address" name="legal_address" value="{{ form_data.legal_address | default(subject.legal_address) }}" required>
+                        </p>
+                        <p>
+                            <label for="director_full_name">ФИО директора:</label>
+                            <input type="text" id="director_full_name" name="director_full_name" value="{{ form_data.director_full_name | default(subject.director_full_name) }}" required>
+                        </p>
+                        <p>
+                            <label for="payment_details">Реквизиты для оплаты:</label>
+                            <textarea id="payment_details" name="payment_details" required>{{ form_data.payment_details | default(subject.payment_details) }}</textarea>
+                        </p>
+                        <p>
+                            <label for="phone">Телефон:</label>
+                            <input type="text" id="phone" name="phone" value="{{ form_data.phone | default(subject.phone) }}" required>
+                        </p>
+                        <p>
+                            <label for="email">Email (необязательно):</label>
+                            <input type="email" id="email" name="email" value="{{ form_data.email | default(subject.email or '') }}">
+                        </p>
+                    {% endif %}
+                    <p>
+                        <button type="submit" class="create-btn">Сохранить</button>
+                        <a href="{{ url_for('subjects.subject_detail', subject_type=subject_type, id=subject.id) }}" class="cancel-btn">Отмена</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    {% else %}
+        {% if subject_type == 'physical' %}
+            <p><strong>ФИО:</strong> {{ subject.full_name }}</p>
+            <p><strong>Паспорт:</strong> {{ subject.passport }}</p>
+            <p><strong>Адрес:</strong> {{ subject.address }}</p>
+            <p><strong>Телефон:</strong> {{ subject.phone }}</p>
+            <p><strong>Email:</strong> {{ subject.email or 'Не указан' }}</p>
+        {% else %}
+            <p><strong>Наименование:</strong> {{ subject.name }}</p>
+            <p><strong>ИНН:</strong> {{ subject.inn }}</p>
+            <p><strong>Юридический адрес:</strong> {{ subject.legal_address }}</p>
+            <p><strong>ФИО директора:</strong> {{ subject.director_full_name }}</p>
+            <p><strong>Реквизиты для оплаты:</strong> {{ subject.payment_details }}</p>
+            <p><strong>Телефон:</strong> {{ subject.phone }}</p>
+            <p><strong>Email:</strong> {{ subject.email or 'Не указан' }}</p>
+        {% endif %}
+        <div class="button-container">
+            <a href="{{ url_for('subjects.edit_subject', subject_type=subject_type, id=subject.id) }}" class="create-btn">Редактировать</a>
+            <a href="{{ url_for('subjects.physical_persons' if subject_type == 'physical' else 'subjects.legal_entities') }}" class="cancel-btn">Назад</a>
+            <form action="{{ url_for('subjects.delete_subject', subject_type=subject_type, id=subject.id) }}" method="post" style="display: inline;">
+                <button type="submit" class="delete-btn" onclick="return confirm('Вы уверены, что хотите удалить этот субъект?');">Удалить</button>
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}

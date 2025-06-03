@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, jsonify, redirect, url_fo
 from .. import db
 from ..models.physical_person import PhysicalPerson
 from ..models.legal_entity import LegalEntity
+from ..models.contracts import Contract
 from sqlalchemy.exc import IntegrityError
 
 bp = Blueprint('subjects', __name__, url_prefix='/subjects')
@@ -40,7 +41,89 @@ def select_subject(subject_type):
         response = make_response(render_template('subjects/select.html', subjects=subjects, subject_type='legal', query=query, new_subject_id=new_subject_id))
         response.headers['Content-Type'] = 'text/html; charset=utf-8'
         return response
-    return jsonify({'error': 'Неверный тип субъекта'}), 400
+    else:
+        return jsonify({'error': 'Неверный тип субъекта'}), 400
+
+@bp.route('/<string:subject_type>/<int:id>', methods=['GET'])
+def subject_detail(subject_type, id):
+    if subject_type == 'physical':
+        subject = PhysicalPerson.query.get_or_404(id)
+    elif subject_type == 'legal':
+        subject = LegalEntity.query.get_or_404(id)
+    else:
+        return jsonify({'error': 'Неверный тип субъекта'}), 400
+    response = make_response(render_template('subjects/detail.html', subject=subject, subject_type=subject_type, edit_mode=False))
+    response.headers['Content-Type'] = 'text/html; charset=utf-8'
+    return response
+
+@bp.route('/<string:subject_type>/<int:id>/edit', methods=['GET', 'POST'])
+def edit_subject(subject_type, id):
+    if subject_type == 'physical':
+        subject = PhysicalPerson.query.get_or_404(id)
+        form_fields = ['full_name', 'passport', 'address', 'phone', 'email']
+    elif subject_type == 'legal':
+        subject = LegalEntity.query.get_or_404(id)
+        form_fields = ['name', 'inn', 'legal_address', 'director_full_name', 'payment_details', 'phone', 'email']
+    else:
+        return jsonify({'error': 'Неверный тип субъекта'}), 400
+
+    if request.method == 'POST':
+        try:
+            for field in form_fields:
+                value = request.form.get(field, None if field == 'email' else '')
+                if not value and field != 'email':
+                    raise ValueError(f"Поле '{field}' обязательно для заполнения")
+                setattr(subject, field, value)
+            db.session.commit()
+            return redirect(url_for('subjects.subject_detail', subject_type=subject_type, id=id))
+        except IntegrityError as e:
+            db.session.rollback()
+            error = "Такое лицо уже существует (проверьте паспорт или ИНН)"
+            response = make_response(render_template('subjects/detail.html', subject=subject, subject_type=subject_type, edit_mode=True, error=error, form_data=request.form.to_dict()))
+            response.headers['Content-Type'] = 'text/html; charset=utf-8'
+            return response
+        except ValueError as e:
+            response = make_response(render_template('subjects/detail.html', subject=subject, subject_type=subject_type, edit_mode=True, error=str(e), form_data=request.form.to_dict()))
+            response.headers['Content-Type'] = 'text/html; charset=utf-8'
+            return response
+        except Exception as e:
+            db.session.rollback()
+            response = make_response(render_template('subjects/detail.html', subject=subject, subject_type=subject_type, edit_mode=True, error=str(e), form_data=request.form.to_dict()))
+            response.headers['Content-Type'] = 'text/html; charset=utf-8'
+            return response
+
+    form_data = {field: getattr(subject, field) or '' for field in form_fields}
+    response = make_response(render_template('subjects/detail.html', subject=subject, subject_type=subject_type, edit_mode=True, form_data=form_data))
+    response.headers['Content-Type'] = 'text/html; charset=utf-8'
+    return response
+
+@bp.route('/<string:subject_type>/<int:id>/delete', methods=['POST'])
+def delete_subject(subject_type, id):
+    if subject_type == 'physical':
+        subject = PhysicalPerson.query.get_or_404(id)
+        related_contracts = Contract.query.filter_by(physical_person_id=id).first()
+    elif subject_type == 'legal':
+        subject = LegalEntity.query.get_or_404(id)
+        related_contracts = Contract.query.filter_by(legal_entity_id=id).first()
+    else:
+        return jsonify({'error': 'Неверный тип субъекта'}), 400
+
+    if related_contracts:
+        error = "Невозможно удалить субъект, так как он связан с договором."
+        response = make_response(render_template('subjects/detail.html', subject=subject, subject_type=subject_type, edit_mode=False, error=error))
+        response.headers['Content-Type'] = 'text/html; charset=utf-8'
+        return response
+
+    try:
+        db.session.delete(subject)
+        db.session.commit()
+        return redirect(url_for('subjects.physical_persons' if subject_type == 'physical' else 'subjects.legal_entities'))
+    except Exception as e:
+        db.session.rollback()
+        error = f"Ошибка удаления субъекта: {str(e)}"
+        response = make_response(render_template('subjects/detail.html', subject=subject, subject_type=subject_type, edit_mode=False, error=error))
+        response.headers['Content-Type'] = 'text/html; charset=utf-8'
+        return response
 
 @bp.route('/create/<string:subject_type>', methods=['GET', 'POST'])
 def create_subject(subject_type):

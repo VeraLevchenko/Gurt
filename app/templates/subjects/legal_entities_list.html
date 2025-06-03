@@ -15,7 +15,7 @@
         </thead>
         <tbody>
             {% for entity in legal_entities %}
-                <tr>
+                <tr onclick="window.location='{{ url_for('subjects.subject_detail', subject_type='legal', id=entity.id) }}'" style="cursor: pointer;">
                     <td>{{ entity.id }}</td>
                     <td>{{ entity.name }}</td>
                     <td>{{ entity.inn }}</td>

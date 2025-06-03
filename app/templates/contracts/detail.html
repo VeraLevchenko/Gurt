@@ -2,7 +2,7 @@
 {% block content %}
     <h1>{% if edit_mode %}Редактировать договор{% else %}Детали договора{% endif %}</h1>
     {% if error %}
-        <p style="color: red;">{{ error }}</p>
+        <p class="error">{{ error }}</p>
     {% endif %}
     {% if edit_mode %}
         <div class="contract-container">
@@ -12,7 +12,7 @@
                         <label for="number">Номер:</label>
                         <input type="text" id="number" name="number" value="{{ form_data.number | default(contract.number) }}" required
                                oninput="validateNumber(this)">
-                        <span id="number-error" style="color: red; display: none;">Номер должен быть в формате 08-0/XXXXX</span>
+                        <span id="number-error" class="error" style="display: none;">Номер должен быть в формате 08-0/XXXXX</span>
                     </p>
                     <p>
                         <label for="contract_date">Дата:</label>
@@ -65,7 +65,7 @@
         <!-- Модальное окно для выбора субъекта -->
         <div id="subjectModal" class="modal">
             <div class="modal-content">
-                <span class="close" onclick="closeSubjectModal()">&times;</span>
+                <span class="close" onclick="closeSubjectModal()">×</span>
                 <div id="modalContent"></div>
             </div>
         </div>
@@ -83,46 +83,12 @@
         </ul>
         <div class="button-container">
             <a href="{{ url_for('contracts.edit_contract', id=contract.id) }}" class="create-btn">Редактировать</a>
-            <a href="{{ url_for('contracts.list_contracts') }}" class="cancel-btn">Отмена</a>
+            <a href="{{ url_for('contracts.list_contracts') }}" class="cancel-btn">Назад</a>
             <form action="{{ url_for('contracts.delete_contract', id=contract.id) }}" method="post" style="display: inline;">
                 <button type="submit" class="delete-btn" onclick="return confirm('Вы уверены, что хотите удалить договор?');">Удалить</button>
             </form>
         </div>
     {% endif %}
-    <style>
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 800px;
-            border-radius: 5px;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-        }
-    </style>
     <script>
         function validateNumber(input) {
             const regex = /^08-0\/\d+$/;

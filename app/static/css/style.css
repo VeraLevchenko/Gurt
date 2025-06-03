@@ -60,7 +60,8 @@ table {
     margin-top: 20px;
 }
 
-table th, table td {
+table th,
+table td {
     border: 1px solid #ddd;
     padding: 10px;
     text-align: left;
@@ -73,7 +74,25 @@ table th {
 
 table tr:hover {
     background-color: #f1f1f1;
-    cursor: pointer;
+}
+
+.contract-container {
+    max-width: 600px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.contract-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contract-form p {
+    margin: 0;
 }
 
 .contract-details {
@@ -102,18 +121,19 @@ table tr:hover {
     padding: 10px 20px;
     min-width: 120px;
     text-align: center;
-    background-color: #2c3e50; /* Тёмно-синий для "Создать", "Редактировать", "Сохранить" */
+    background-color: #2c3e50;
     color: #fff;
     text-decoration: none;
     border-radius: 4px;
     border: none;
     font-size: 15px;
     line-height: 1.5;
+    cursor: pointer;
     box-sizing: border-box;
 }
 
 .create-btn:hover {
-    background-color: #34495e; /* Тёмный оттенок при наведении */
+    background-color: #34495e;
 }
 
 .cancel-btn {
@@ -121,18 +141,19 @@ table tr:hover {
     padding: 10px 20px;
     min-width: 120px;
     text-align: center;
-    background-color: #6c757d; /* Серый для "Отмена" */
+    background-color: #6c757d;
     color: #fff;
     text-decoration: none;
     border-radius: 4px;
     border: none;
     font-size: 14px;
     line-height: 1.5;
+    cursor: pointer;
     box-sizing: border-box;
 }
 
 .cancel-btn:hover {
-    background-color: #5a6268; /* Тёмно-серый при наведении */
+    background-color: #5a6268;
 }
 
 .delete-btn {
@@ -140,22 +161,25 @@ table tr:hover {
     padding: 10px 20px;
     min-width: 120px;
     text-align: center;
-    background-color: #dc3545; /* Красный для "Удалить" */
+    background-color: #dc3545;
     color: #fff;
     text-decoration: none;
     border-radius: 4px;
     border: none;
     font-size: 14px;
     line-height: 1.5;
+    cursor: pointer;
     box-sizing: border-box;
 }
 
 .delete-btn:hover {
-    background-color: #c82333; /* Тёмно-красный при наведении */
+    background-color: #c82333;
 }
 
 .contract-details input,
-.contract-details textarea {
+.contract-form input,
+.contract-form textarea,
+.contract-form select {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
@@ -163,22 +187,26 @@ table tr:hover {
     box-sizing: border-box;
 }
 
-.contract-details textarea {
+.contract-details textarea,
+.contract-form textarea {
     height: 100px;
 }
 
-.contract-details label {
+.contract-details label,
+.contract-form label {
     font-weight: bold;
+    margin-bottom: 5px;
     color: #2c3e50;
+    display: block;
 }
 
-.contract-details input[type="checkbox"] {
+.contract-form input[type="checkbox"] {
+    width: auto;
     margin-right: 10px;
 }
 
-.contract-details label {
-    display: inline-block;
-    margin-bottom: 5px;
+.work-types-container {
+    margin-top: 10px;
 }
 
 .work-types {
@@ -199,7 +227,6 @@ table tr:hover {
     margin: 0;
 }
 
-/* Модальное окно */
 .modal {
     display: none;
     position: fixed;
@@ -236,28 +263,11 @@ table tr:hover {
     text-decoration: none;
 }
 
-/* Таблица в модальном окне */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+.error {
+    color: red;
+    margin: 10px 0;
 }
 
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-tr:hover {
-    background-color: #f5f5f5;
-}
-
-/* Поле поиска */
 #searchInput {
     width: 100%;
     padding: 8px;
@@ -265,32 +275,15 @@ tr:hover {
     box-sizing: border-box;
 }
 
-/* Кнопки */
-.create-btn, .cancel-btn {
-    padding: 8px 16px;
-    margin-right: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.create-btn {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.cancel-btn {
-    background-color: #f44336;
-    color: white;
-}
-
 .new-subject {
-    background-color: #e0f7fa; /* Светло-голубой фон для новой записи */
+    background-color: #e0f7fa;
 }
 
 .button-container {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-content: flex-start;
     align-items: center;
-    margin-bottom: 10px;
+    gap: 10px;
+    margin-bottom: 20px;
 }
