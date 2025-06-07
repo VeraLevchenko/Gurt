@@ -6,6 +6,9 @@ from datetime import date
 db = SQLAlchemy()
 migrate = Migrate()
 
+import logging
+logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object('app.config.Config')

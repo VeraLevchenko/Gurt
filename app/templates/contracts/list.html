@@ -13,6 +13,7 @@
                 <th>Субъект</th>
                 <th>Цена</th>
                 <th>Адрес</th>
+                <th>Объект</th>
                 <th>Наименование работ</th>
             </tr>
         </thead>
@@ -24,6 +25,7 @@
                     <td>{{ contract.get_subject() }}</td>
                     <td>{{ contract.price }}</td>
                     <td>{{ contract.address }}</td>
+                    <td>{{ contract.object_name }}</td>
                     <td>
                         <ul>
                             {% for work_type in contract.work_types %}

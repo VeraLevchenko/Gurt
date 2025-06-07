@@ -1,22 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Создать новый договор</h1>
+    <h1>Создать договор</h1>
     {% if error %}
-        <p style="color: red;">{{ error }}</p>
+        <p class="error">{{ error }}</p>
     {% endif %}
     <div class="contract-container">
-        <form action="{{ url_for('contracts.create_contract') }}" method="post" onsubmit="return validateForm()">
+        <form id="createForm" action="{{ url_for('contracts.create_contract') }}" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
             <div class="contract-form">
                 <p>
                     <label for="number">Номер:</label>
-                    <input type="text" id="number" name="number" value="{{ form_data.number | default('') }}" required
+                    <input type="text" id="number" name="number" value="{{ form_data.number }}" required
                            oninput="validateNumber(this)">
-                    <span id="number-error" style="color: red; display: none;">Номер должен быть в формате 08-0/XXXXX</span>
+                    <span id="number-error" class="error" style="display: none;">Номер должен быть в формате 08-0/XXXXX</span>
                 </p>
                 <p>
                     <label for="contract_date">Дата:</label>
-                    <input type="date" id="contract_date" name="contract_date" 
-                           value="{{ form_data.contract_date | default(today | date_format) }}" required>
+                    <input type="date" id="contract_date" name="contract_date" value="{{ form_data.contract_date }}" required>
                 </p>
                 <p>
                     <label for="subject_type">Тип субъекта:</label>
@@ -28,17 +27,39 @@
                 </p>
                 <p>
                     <label for="subject_name">Субъект:</label>
-                    <input type="text" id="subject_name" name="subject_name" value="{{ form_data.subject_name | default('') }}" readonly required>
-                    <input type="hidden" id="subject_id" name="subject_id" value="{{ form_data.subject_id | default('') }}">
+                    <input type="text" id="subject_name" name="subject_name" value="{{ form_data.subject_name }}" readonly required>
+                    <input type="hidden" id="subject_id" name="subject_id" value="{{ form_data.subject_id }}">
                     <button type="button" id="select_subject_btn" class="create-btn" disabled onclick="openSubjectModal()">Выбрать субъект</button>
                 </p>
                 <p>
                     <label for="price">Цена:</label>
-                    <input type="number" step="0.01" id="price" name="price" value="0.00" readonly>
+                    <input type="number" step="0.01" id="price" name="price" value="0" readonly>
                 </p>
                 <p>
                     <label for="address">Адрес:</label>
-                    <input type="text" id="address" name="address" value="{{ form_data.address | default('') }}" required>
+                    <input type="text" id="address" name="address" value="{{ form_data.address }}" required>
+                </p>
+                <p>
+                    <label for="object_name">Объект:</label>
+                    <input type="text" id="object_name" name="object_name" value="{{ form_data.object_name }}" required>
+                </p>
+                <p>
+                    <label for="documents">Вложения документов (макс. 4, только PDF, DOCX):</label>
+                    <input type="file" id="documents" name="documents" multiple accept=".pdf,.docx">
+                    <ul id="documentList" class="file-list">
+                        {% for name in form_data.document_names %}
+                            <li data-filename="{{ name }}">{{ name }} <span class="delete-icon" onclick="removeNewFile(this, 'documents')">×</span></li>
+                        {% endfor %}
+                    </ul>
+                </p>
+                <p>
+                    <label for="additional_files">Дополнительные вложения (макс. 10, только PDF, DOCX):</label>
+                    <input type="file" id="additional_files" name="additional_files" multiple accept=".pdf,.docx">
+                    <ul id="additionalFileList" class="file-list">
+                        {% for name in form_data.additional_file_names %}
+                            <li data-filename="{{ name }}">{{ name }} <span class="delete-icon" onclick="removeNewFile(this, 'additional_files')">×</span></li>
+                        {% endfor %}
+                    </ul>
                 </p>
             </div>
             <div class="work-types-container">
@@ -56,12 +77,11 @@
                 </div>
             </div>
             <p>
-                <button type="submit" class="create-btn">Сохранить</button>
+                <button type="submit" class="create-btn">Создать</button>
                 <a href="{{ url_for('contracts.list_contracts') }}" class="cancel-btn">Отмена</a>
             </p>
         </form>
     </div>
-    <!-- Модальное окно для выбора субъекта -->
     <div id="subjectModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeSubjectModal()">×</span>
@@ -69,72 +89,24 @@
         </div>
     </div>
     <style>
-        .contract-container {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
+        .delete-icon {
+            color: red;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            vertical-align: middle;
         }
-        .contract-form {
-            flex: 1;
-            min-width: 300px;
+        .delete-icon:hover {
+            color: darkred;
         }
-        .work-types-container {
-            flex: 2;
-            min-width: 300px;
-        }
-        .work-types {
-            margin-top: 8px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-        .work-type-item {
+        .file-list li {
+            margin: 5px 0;
             display: flex;
             align-items: center;
-            margin-bottom: 5px;
         }
-        .work-type-item input[type="checkbox"] {
-            margin-right: 6px;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 800px;
-            border-radius: 5px;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-        }
-        @media (max-width: 768px) {
-            .contract-container {
-                flex-direction: column;
-            }
-            .work-types {
-                grid-template-columns: 1fr;
-            }
+        .error {
+            color: red;
+            font-size: 12px;
         }
     </style>
     <script>
@@ -160,7 +132,7 @@
             const checkboxes = document.querySelectorAll('input[name="work_description"]:checked');
             let totalPrice = 0;
             checkboxes.forEach(checkbox => {
-                totalPrice += parseFloat(checkbox.getAttribute('data-price')) || 0;
+                totalPrice += parseFloat(checkbox.getAttribute('data-price'));
             });
             document.getElementById('price').value = totalPrice.toFixed(2);
         }
@@ -174,24 +146,13 @@
         function openSubjectModal() {
             const subjectType = document.getElementById('subject_type').value;
             if (!subjectType) return;
-            console.log('Открытие модального окна для:', subjectType); // Отладка
             const modal = document.getElementById('subjectModal');
             const modalContent = document.getElementById('modalContent');
             fetch(`/subjects/select/${subjectType}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Ошибка сервера: ' + response.status);
-                    }
-                    return response.text();
-                })
+                .then(response => response.text())
                 .then(html => {
                     modalContent.innerHTML = html;
                     modal.style.display = 'block';
-                    // Привязываем обработчик для кнопки "Создать"
-                    attachCreateButtonListener(subjectType);
-                })
-                .catch(error => {
-                    console.error('Ошибка при открытии модального окна:', error);
                 });
         }
 
@@ -205,42 +166,50 @@
             closeSubjectModal();
         }
 
-        function openCreateSubjectWindow(subjectType) {
-            console.log('Открытие окна создания для:', subjectType); // Отладка
-            const createUrl = `/subjects/create/${subjectType}`;
-            console.log('URL для создания:', createUrl); // Отладка
-            const createWindow = window.open(createUrl, 'createSubject', 'width=600,height=500');
-            if (!createWindow) {
-                console.error('Не удалось открыть всплывающее окно.');
-                alert('Разрешите всплывающие окна.');
+        // Отображение новых файлов после выбора
+        function addFileToList(file, listId, inputId, maxFiles) {
+            const fileList = document.getElementById(listId);
+            const currentFiles = fileList.querySelectorAll('li').length;
+            if (currentFiles >= maxFiles) {
+                alert(`Максимум ${maxFiles} файлов`);
+                document.getElementById(inputId).value = '';
+                return false;
             }
+            const li = document.createElement('li');
+            li.dataset.filename = file.name;
+            li.innerHTML = `${file.name} <span class="delete-icon" onclick="removeNewFile(this, '${inputId}')">×</span>`;
+            fileList.appendChild(li);
+            return true;
         }
 
-        function attachCreateButtonListener(subjectType) {
-            const createButton = document.getElementById('createSubjectBtn');
-            if (createButton) {
-                console.log('Привязка обработчика для кнопки "Создать"'); // Отладка
-                createButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log('Кнопка "Создать" нажата'); // Отладка
-                    openCreateSubjectWindow(subjectType);
-                });
-            } else {
-                console.error('Кнопка "createSubjectBtn" не найдена'); // Отладка
-            }
+        document.getElementById('documents').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                addFileToList(file, 'documentList', 'documents', 4);
+            });
+        });
+
+        document.getElementById('additional_files').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                addFileToList(file, 'additionalFileList', 'additional_files', 10);
+            });
+        });
+
+        // Удаление нового файла
+        function removeNewFile(element, inputId) {
+            const li = element.parentElement;
+            li.remove();
+            const input = document.getElementById(inputId);
+            const dt = new DataTransfer();
+            const files = Array.from(input.files).filter(file => file.name !== li.dataset.filename);
+            files.forEach(file => dt.items.add(file));
+            input.files = dt.files;
         }
 
-        window.addEventListener('load', () => {
-            console.log('Страница create.html загружена'); // Отладка
+        window.onload = () => {
             updatePrice();
             updateSubjectButton();
-            const urlParams = new URLSearchParams(window.location.search);
-            const subjectType = urlParams.get('openModal');
-            if (subjectType) {
-                document.getElementById('subject_type').value = subjectType;
-                updateSubjectButton();
-                openSubjectModal();
-            }
-        });
+        };
     </script>
 {% endblock %}

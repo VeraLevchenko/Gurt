@@ -6,7 +6,7 @@
     {% endif %}
     {% if edit_mode %}
         <div class="contract-container">
-            <form action="{{ url_for('contracts.edit_contract', id=contract.id) }}" method="post" onsubmit="return validateForm()">
+            <form id="editForm" action="{{ url_for('contracts.edit_contract', id=contract.id) }}" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
                 <div class="contract-form">
                     <p>
                         <label for="number">Номер:</label>
@@ -40,6 +40,38 @@
                     <p>
                         <label for="address">Адрес:</label>
                         <input type="text" id="address" name="address" value="{{ form_data.address | default(contract.address) }}" required>
+                    </p>
+                    <p>
+                        <label for="object_name">Объект:</label>
+                        <input type="text" id="object_name" name="object_name" value="{{ form_data.object_name | default(contract.object_name) }}" required>
+                    </p>
+                    <p>
+                        <label for="documents">Вложения документов (макс. 4, только PDF, DOCX):</label>
+                        <input type="file" id="documents" name="documents" multiple accept=".pdf,.docx">
+                        <ul id="documentList">
+                            {% if contract.document_paths %}
+                                {% for doc in contract.document_paths %}
+                                    <li data-filename="{{ doc }}">
+                                        <a href="{{ url_for('contracts.download_file', filename=doc) }}">{{ doc }}</a>
+                                        <span class="delete-icon" onclick="removeExistingFile('{{ doc }}', 'document', {{ contract.id }})">×</span>
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </p>
+                    <p>
+                        <label for="additional_files">Дополнительные вложения (макс. 10, только PDF, DOCX):</label>
+                        <input type="file" id="additional_files" name="additional_files" multiple accept=".pdf,.docx">
+                        <ul id="additionalFileList">
+                            {% if contract.additional_file_paths %}
+                                {% for file in contract.additional_file_paths %}
+                                    <li data-filename="{{ file }}">
+                                        <a href="{{ url_for('contracts.download_file', filename=file) }}">{{ file }}</a>
+                                        <span class="delete-icon" onclick="removeExistingFile('{{ file }}', 'additional', {{ contract.id }})">×</span>
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
                     </p>
                 </div>
                 <div class="work-types-container">
@@ -75,11 +107,32 @@
         <p><strong>Субъект:</strong> {{ contract.get_subject() }}</p>
         <p><strong>Цена:</strong> {{ contract.price }}</p>
         <p><strong>Адрес:</strong> {{ contract.address }}</p>
+        <p><strong>Объект:</strong> {{ contract.object_name }}</p>
         <p><strong>Виды работ:</strong></p>
         <ul>
             {% for work_type in contract.work_types %}
                 <li>{{ work_type.name }} ({{ work_type.price }} руб.)</li>
             {% endfor %}
+        </ul>
+        <p><strong>Вложения документов:</strong></p>
+        <ul>
+            {% if contract.document_paths %}
+                {% for doc in contract.document_paths %}
+                    <li><a href="{{ url_for('contracts.download_file', filename=doc) }}">{{ doc }}</a></li>
+                {% endfor %}
+            {% else %}
+                <li>Нет вложений</li>
+            {% endif %}
+        </ul>
+        <p><strong>Дополнительные вложения:</strong></p>
+        <ul>
+            {% if contract.additional_file_paths %}
+                {% for file in contract.additional_file_paths %}
+                    <li><a href="{{ url_for('contracts.download_file', filename=file) }}">{{ file }}</a></li>
+                {% endfor %}
+            {% else %}
+                <li>Нет вложений</li>
+            {% endif %}
         </ul>
         <div class="button-container">
             <a href="{{ url_for('contracts.edit_contract', id=contract.id) }}" class="create-btn">Редактировать</a>
@@ -89,6 +142,27 @@
             </form>
         </div>
     {% endif %}
+    <style>
+        .delete-icon {
+            color: red;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+        .delete-icon:hover {
+            color: darkred;
+        }
+        .file-list li {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+        }
+    </style>
     <script>
         function validateNumber(input) {
             const regex = /^08-0\/\d+$/;
@@ -144,6 +218,58 @@
             document.getElementById('subject_id').value = id;
             document.getElementById('subject_name').value = name;
             closeSubjectModal();
+        }
+
+        // Отображение новых файлов после выбора
+        document.getElementById('documents').addEventListener('change', function(e) {
+            const fileList = document.getElementById('documentList');
+            const files = Array.from(e.target.files);
+            const currentFiles = fileList.querySelectorAll('li').length;
+            if (currentFiles + files.length > 4) {
+                alert('Максимум 4 файла для документов');
+                e.target.value = ''; // Очищаем input
+                return;
+            }
+            files.forEach(file => {
+                const li = document.createElement('li');
+                li.dataset.filename = file.name;
+                li.innerHTML = `${file.name} <span class="delete-icon" onclick="removeNewFile(this, 'documents')">×</span>`;
+                fileList.appendChild(li);
+            });
+        });
+
+        document.getElementById('additional_files').addEventListener('change', function(e) {
+            const fileList = document.getElementById('additionalFileList');
+            const files = Array.from(e.target.files);
+            const currentFiles = fileList.querySelectorAll('li').length;
+            if (currentFiles + files.length > 10) {
+                alert('Максимум 10 дополнительных файлов');
+                e.target.value = ''; // Очищаем input
+                return;
+            }
+            files.forEach(file => {
+                const li = document.createElement('li');
+                li.dataset.filename = file.name;
+                li.innerHTML = `${file.name} <span class="delete-icon" onclick="removeNewFile(this, 'additional_files')">×</span>`;
+                fileList.appendChild(li);
+            });
+        });
+
+        // Удаление нового файла (до отправки формы)
+        function removeNewFile(element, inputId) {
+            const li = element.parentElement;
+            li.remove();
+            const input = document.getElementById(inputId);
+            const dt = new DataTransfer();
+            const files = Array.from(input.files).filter(file => file.name !== li.dataset.filename);
+            files.forEach(file => dt.items.add(file));
+            input.files = dt.files;
+        }
+
+        // Удаление существующего файла через сервер
+        function removeExistingFile(filename, fileType, contractId) {
+            if (!confirm('Удалить файл?')) return;
+            window.location.href = `/contracts/${contractId}/remove_file/${encodeURIComponent(filename)}/${fileType}`;
         }
 
         window.onload = () => {
