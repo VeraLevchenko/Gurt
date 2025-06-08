@@ -24,13 +24,12 @@ def legal_entities():
 @bp.route('/select/<string:subject_type>', methods=['GET'])
 def select_subject(subject_type):
     query = request.args.get('q', '')
-    new_subject_id = request.args.get('new_subject_id')
     if subject_type == 'physical':
         subjects = PhysicalPerson.query.filter(
             PhysicalPerson.full_name.ilike(f'%{query}%') |
             PhysicalPerson.passport.ilike(f'%{query}%')
         ).all()
-        response = make_response(render_template('subjects/select.html', subjects=subjects, subject_type='physical', query=query, new_subject_id=new_subject_id))
+        response = make_response(render_template('subjects/select.html', subjects=subjects, subject_type='physical', query=query))
         response.headers['Content-Type'] = 'text/html; charset=utf-8'
         return response
     elif subject_type == 'legal':
@@ -38,7 +37,7 @@ def select_subject(subject_type):
             LegalEntity.name.ilike(f'%{query}%') |
             LegalEntity.inn.ilike(f'%{query}%')
         ).all()
-        response = make_response(render_template('subjects/select.html', subjects=subjects, subject_type='legal', query=query, new_subject_id=new_subject_id))
+        response = make_response(render_template('subjects/select.html', subjects=subjects, subject_type='legal', query=query))
         response.headers['Content-Type'] = 'text/html; charset=utf-8'
         return response
     else:
@@ -152,22 +151,7 @@ def create_subject(subject_type):
                 return jsonify({'error': 'Неверный тип субъекта'}), 400
             db.session.add(subject)
             db.session.commit()
-            if redirect_param == 'list' and not request.headers.get('X-Requested-With'):
-                return redirect(url_for('subjects.physical_persons' if subject_type == 'physical' else 'subjects.legal_entities'))
-            query = request.form.get('q', '')
-            if subject_type == 'physical':
-                subjects = PhysicalPerson.query.filter(
-                    PhysicalPerson.full_name.ilike(f'%{query}%') |
-                    PhysicalPerson.passport.ilike(f'%{query}%')
-                ).all()
-            else:
-                subjects = LegalEntity.query.filter(
-                    LegalEntity.name.ilike(f'%{query}%') |
-                    LegalEntity.inn.ilike(f'%{query}%')
-                ).all()
-            response = make_response(render_template('subjects/select.html', subjects=subjects, subject_type=subject_type, query=query, new_subject_id=subject.id))
-            response.headers['Content-Type'] = 'text/html; charset=utf-8'
-            return response
+            return redirect(url_for('subjects.physical_persons' if subject_type == 'physical' else 'subjects.legal_entities'))
         except IntegrityError as e:
             db.session.rollback()
             error = "Такое лицо уже существует (проверьте паспорт или ИНН)"

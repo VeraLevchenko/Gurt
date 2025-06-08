@@ -57,48 +57,11 @@
             }
         });
 
-        if (!isRedirectList) {
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-                const formData = new FormData(form);
-                fetch('{{ url_for("subjects.create_subject", subject_type="legal") }}', {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(data => { throw new Error(data.error || 'Ошибка сервера'); });
-                    }
-                    return response.text();
-                })
-                .then(html => {
-                    if (window.opener) {
-                        window.opener.document.getElementById('modalContent').innerHTML = html;
-                        window.opener.document.getElementById('subjectModal').style.display = 'block';
-                        window.close();
-                    } else {
-                        let modal = document.getElementById('subjectModal');
-                        if (!modal) {
-                            modal = document.createElement('div');
-                            modal.id = 'subjectModal';
-                            modal.className = 'modal';
-                            modal.innerHTML = `<div class="modal-content"><span class="close" onclick="closeSubjectModal()">×</span><div id="modalContent"></div></div>`;
-                            document.body.appendChild(modal);
-                        }
-                        document.getElementById('modalContent').innerHTML = html;
-                        modal.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    alert('Ошибка при создании юридического лица: ' + error.message);
-                });
-            });
-        }
-
         function closeSubjectModal() {
             const modal = document.getElementById('subjectModal');
-            if (modal) modal.style.display = 'none';
+            if (modal) {
+                modal.style.display = 'none';
+            }
         }
     </script>
 {% endblock %}
