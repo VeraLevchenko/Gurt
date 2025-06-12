@@ -38,8 +38,14 @@
 │   │   └── subjects.py
 │   ├── services
 │   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-38.pyc
+│   │   │   ├── contract_service.cpython-38.pyc
+│   │   │   └── subject_service.cpython-38.pyc
+│   │   ├── contract_service.py
 │   │   ├── crypto.py
-│   │   └── search.py
+│   │   ├── search.py
+│   │   └── subject_service.py
 │   ├── static
 │   │   ├── css
 │   │   │   └── style.css
@@ -61,11 +67,15 @@
 │       └── subjects
 │           ├── create_legal.html
 │           ├── create_physical.html
+│           ├── detail.html
 │           ├── legal_entities_list.html
 │           ├── physical_persons_list.html
 │           └── select.html
 ├── app.py
+├── backup_20250608.sql
 ├── import_tariffs.py
+├── instance
+│   └── uploads
 ├── migrations
 │   ├── README
 │   ├── __pycache__
@@ -74,15 +84,21 @@
 │   ├── env.py
 │   ├── script.py.mako
 │   └── versions
+│       ├── 0322fb214fe4_increase_passport_column_length_to_255.py
+│       ├── 2b8b469977d0_add_id_column_to_contract_additional_.py
 │       ├── 43fa26595b36_add_unit_and_price_with_vat_to_worktype.py
 │       ├── 65e3da171252_.py
 │       ├── 9dc158cbe837_add_worktype_and_many_to_many_.py
 │       ├── __pycache__
+│       │   ├── 0322fb214fe4_increase_passport_column_length_to_255.cpython-38.pyc
+│       │   ├── 2b8b469977d0_add_id_column_to_contract_additional_.cpython-38.pyc
 │       │   ├── 43fa26595b36_add_unit_and_price_with_vat_to_worktype.cpython-38.pyc
 │       │   ├── 65e3da171252_.cpython-38.pyc
 │       │   ├── 9dc158cbe837_add_worktype_and_many_to_many_.cpython-38.pyc
-│       │   └── ce2dc3860cc0_add_physicalperson_legalentity_and_.cpython-38.pyc
-│       └── ce2dc3860cc0_add_physicalperson_legalentity_and_.py
+│       │   ├── ce2dc3860cc0_add_physicalperson_legalentity_and_.cpython-38.pyc
+│       │   └── d37483fbfd43_добавление_поля_object_name_и_таблиц_.cpython-38.pyc
+│       ├── ce2dc3860cc0_add_physicalperson_legalentity_and_.py
+│       └── d37483fbfd43_добавление_поля_object_name_и_таблиц_.py
 ├── requirements.txt
 ├── structure.txt
 ├── tests
@@ -90,6 +106,23 @@
 │   ├── test_contracts.py
 │   ├── test_incoming.py
 │   └── test_outgoing.py
+├── uploads
+│   ├── 1301cac7-9c78-4f3b-8077-2d499ff1042d.docx
+│   ├── 155dad7c-c72c-494a-88f7-d3ab51044084.pdf
+│   ├── 17c3c1c4-1b7e-421c-acba-1bc179e80b59.docx
+│   ├── 1a30df51-7a92-486f-9629-809bfe034ac9.pdf
+│   ├── 1b4d43fa-c635-4206-bb5d-f8b1c99abc27.pdf
+│   ├── 1c50923b-17fc-40ae-8696-fbd8f14771ad.pdf
+│   ├── 57e1b154-0ca9-4e12-a336-5585977ba741.pdf
+│   ├── 70cf967c-ce6a-48ad-9f40-e1279849e3aa.pdf
+│   ├── 78e93782-1c7a-45e2-b56f-da8be407f331.docx
+│   ├── 804514f5-a4ee-43a8-ae3c-fd369468c714.docx
+│   ├── 8a8a9be3-3710-4a42-8056-a6854bb4fde2.pdf
+│   ├── 8c122964-f9b0-49e6-a849-32fd6649d191.docx
+│   ├── b17a53e9-ce9b-4f5e-be65-09174f319914.docx
+│   ├── dcb3a121-52e1-4ee9-8ced-6ea1b2b0f4eb.docx
+│   ├── e4a02369-4366-4322-a8af-e815201a7e7d.docx
+│   └── ffac2039-6ef4-497b-9350-a66ae82ac77d.docx
 ├── venv
 │   ├── bin
 │   │   ├── Activate.ps1
@@ -3472,4 +3505,4 @@
 │           └── wheel-0.34.2-py2.py3-none-any.whl
 └── Тарифы.docx
 
-397 directories, 3075 files
+401 directories, 3104 files
